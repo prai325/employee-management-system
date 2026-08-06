@@ -225,3 +225,8 @@ This is the recommended SQLAlchemy 2.x style.
 -> Setup GIT <-
 
 git init
+git add .
+https://github.com/prai325/employee-management-system.git
+git remote -v
+git branch -M main
+git push -u origin main
