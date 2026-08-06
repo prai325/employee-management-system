@@ -1,0 +1,227 @@
+roles
+-----
+id
+name
+
+departments
+-----------
+id
+name
+
+users
+-----
+id
+email
+password
+role_id
+
+employees
+----------
+id
+user_id
+department_id
+first_name
+last_name
+phone
+salary
+joining_date
+profile_image
+status
+
+
+
+Role (1)
+   │
+   └──────────────► Users (Many)
+
+Department (1)
+   │
+   └──────────────► Employees (Many)
+
+User (1)
+   │
+   └──────────────► Employee (1)
+   
+
+
+employee-management/
+│
+├── app/
+│   ├── core/
+│   ├── db/
+│   ├── models/
+│   ├── schemas/
+│   ├── repositories/
+│   ├── services/
+│   ├── dependencies/
+│   ├── routers/
+│   ├── middleware/
+│   ├── utils/
+│   └── main.py
+│
+├── alembic/
+├── .env
+├── requirements.txt
+└── alembic.ini
+
+
+Folder Responsibilities
+
+routers/
+API endpoints
+Request receive karega
+Response return karega
+
+services/
+Business logic
+Database queries
+Validation
+Transactions
+
+models/
+SQLAlchemy Models
+
+schemas/
+Pydantic Request/Response Models
+
+dependencies/
+get_db()
+get_current_user()
+get_auth_service()
+get_employee_service()
+
+core/
+Config
+Security
+Exceptions
+
+db/
+Database connection
+Session
+Base
+
+middleware/
+CORS
+Logging
+Custom middleware
+
+utils/
+Helper functions
+File upload helpers
+Common utilities
+
+static/
+Profile images
+Uploaded files
+
+
+python -m venv .venv
+
+.venv\Scripts\activate    // CMD
+.venv\Scripts\Activate.ps1  // PowerShell
+
+pip install "fastapi[standard]" or pip install fastapi uvicorn(OLD)
+
+pip install sqlalchemy aiosqlite alembic pydantic-settings python-dotenv python-jose[cryptography] passlib[bcrypt]
+pip install sqlalchemy asyncmy alembic pydantic-settings python-dotenv python-jose[cryptography] passlib[bcrypt]
+
+DATABASE_URL=mysql+asyncmy://root:password@localhost:3306/employee_management (password optional, :3306 optional)
+DATABASE_URL=mysql+asyncmy://root:@localhost:3306/employee_management (password optional)
+
+
+fastapi dev app/main.py
+
+==========================================================
+from sqlalchemy.orm import DeclarativeBase
+
+class Base(DeclarativeBase):
+    pass
+
+Why do we create Base?
+
+Remember Alembic?
+
+target_metadata = Base.metadata
+
+Base register all models.
+
+Example->
+    class User(Base):
+    ...
+
+    class Employee(Base):
+        ...
+Jab bhi koi model Base inherit karega...
+
+Automatically
+
+Base.metadata
+
+me register ho jayega.
+
+Isiliye Alembic migration generate kar pata hai.
+========================================================================    
+Why do we use?
+AsyncGenerator[AsyncSession, None]
+
+Ans:
+ Because get_db() uses yield instead of return, it becomes an async generator. It yields an AsyncSession object to FastAPI, and None indicates that no value is sent back into the generator.
+========================================================================
+Why do we use async with?
+Ans:
+ async with AsyncSessionLocal() as session:
+
+ Ye internally kuch aisa karta hai.
+
+ session = AsyncSessionLocal()
+
+try:
+
+    yield session
+
+finally:
+
+    await session.close()
+==============================================
+Synchronous
+
+with open(...) as file:
+
+Internally.
+
+try:
+    ...
+finally:
+    file.close()
+==================================================
+Asynchronous
+
+async with AsyncSessionLocal() as session:
+
+Internally.
+
+try:
+    ...
+finally:
+    await session.close()
+==================================================
+Why use Mapped?
+
+Remember our discussion on type hints?
+
+name: Mapped[str]
+
+This tells:
+
+Python
+SQLAlchemy
+IDE
+
+that name is a string column managed by the ORM.
+
+This is the recommended SQLAlchemy 2.x style.
+
+================================================
+-> Setup GIT <-
+
+git init
