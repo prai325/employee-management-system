@@ -230,3 +230,45 @@ https://github.com/prai325/employee-management-system.git
 git remote -v
 git branch -M main
 git push -u origin main
+
+====================================================
+alembic init -t async alembic
+alembic revision --autogenerate -m "Create roles table"
+alembic upgrade head 
+
+===================================================
+Final Architecture:
+                 GitHub
+                    │
+                    ▼
+             GitHub Actions
+                    │
+                    ▼
+             Docker Build
+                    │
+                    ▼
+                 AWS EC2
+                    │
+      ┌─────────────┼──────────────┐
+      ▼             ▼              ▼
+   FastAPI      Celery Worker   Celery Beat
+      │             │
+      └──────┬──────┘
+             ▼
+           Redis
+             │
+             ▼
+        MySQL (RDS)
+             │
+             ▼
+          AWS S3
+             │
+      S3 Event Trigger
+             ▼
+        AWS Lambda
+             │
+             ▼
+     Thumbnail / PDF / CSV Processing
+             │
+             ▼
+        CloudWatch Logs
