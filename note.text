@@ -235,6 +235,7 @@ git push -u origin main
 alembic init -t async alembic
 alembic revision --autogenerate -m "Create roles table"
 alembic upgrade head 
+alembic revision --autogenerate -m "Add department table and timestamps to roles"
 
 ===================================================
 Final Architecture:
