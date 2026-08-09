@@ -487,3 +487,61 @@ self = object/instance ki state chahiye
 
 Instance method: use when the behavior depends on a particular object's state.  // self
 Static method: use when the behavior doesn't depend on instance or class state, but logically belongs to the class. // @staticmethod
+=====================================================
+                SQLAlchemy Query
+                       │
+                       ▼
+                select(Employee)
+                       │
+              ┌────────┴────────┐
+              ▼                 ▼
+           Search             Filter
+              │                 │
+              └────────┬────────┘
+                       ▼
+                    Sort
+                       │
+                       ▼
+                  Pagination
+                       │
+                       ▼
+                  db.execute()
+                       │
+                       ▼
+                     MySQL
+==========================================================================
+
+                    ┌──────────────┐
+                    │   Client     │
+                    └──────┬───────┘
+                           ↓
+                    ┌──────────────┐
+                    │ API Gateway  │
+                    └──────┬───────┘
+                           ↓
+              ┌────────────┴────────────┐
+              ↓                         ↓
+        FastAPI Services             Auth
+              │
+       ┌──────┼────────┐
+       ↓      ↓        ↓
+    Employee Attendance User
+       │      │        │
+       └──────┼────────┘
+              ↓
+            Kafka
+              ↓
+      ┌───────┴────────┐
+      ↓                ↓
+   Celery           Services
+      │
+    Redis
+      │
+    Cache
+
+              ↓
+           MySQL/RDS
+              │
+             AWS
+              │
+        CI/CD Pipeline

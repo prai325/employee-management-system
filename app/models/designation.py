@@ -1,4 +1,4 @@
-from sqlalchemy import String
+from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -16,6 +16,16 @@ class Designation(Base, TimestampMixin):
         String(100),
         unique=True,
         nullable=False
+    )
+
+    department_id: Mapped[int] = mapped_column(
+        ForeignKey("departments.id"),
+        nullable=False
+    )
+
+    department = relationship(
+        "Department",
+        back_populates="designations"
     )
 
     employees = relationship(

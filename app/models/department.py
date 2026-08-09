@@ -10,3 +10,7 @@ class Department(Base, TimestampMixin):
     name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
 
     employees = relationship("Employee", back_populates="department")
+    designations = relationship(
+        "Designation",
+        back_populates="department"
+    )
