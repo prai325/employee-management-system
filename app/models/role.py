@@ -8,4 +8,5 @@ class Role(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(primary_key=True)             # "Mapped" type hints
     name: Mapped[str] = mapped_column(String(50), unique=True, nullable=False) # that name is a string column managed by the ORM.
+
     users = relationship("User", back_populates="role")

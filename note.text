@@ -273,3 +273,217 @@ Final Architecture:
              │
              ▼
         CloudWatch Logs
+
+
+Relationship map ============================
+
+Role
+ │
+ │ 1
+ ▼
+Users
+ │
+ │ 1
+ ▼
+Employee
+ │
+ ├───────────────> Department
+ │                    1
+ │                    ▲
+ │                    │
+ │                    └── many Employees
+ │
+ ├───────────────> Designation
+ │                    1
+ │                    ▲
+ │                    │
+ │                    └── many Employees
+ │
+ └───────────────> Attendance
+                      1
+                      ▲
+                      │
+                      └── many Attendance records
+
+Relationship Rule=========
+
+Model A:
+x = relationship("ModelB", back_populates="y")
+
+Model B:
+y = relationship("ModelA", back_populates="x")
+
+======================================
+ForeignKey → Database relationship
+relationship() → Python/ORM relationship
+back_populates → Opposite model ka relationship attribute
+
+=================================================
+roles
+   │
+   └──< users
+           │
+           └── 1:1 employee
+                    │
+        ┌───────────┼────────────┐
+        ▼           ▼            ▼
+   department  designation   attendance
+                                      
+                    │
+                    ▼
+              leave_requests
+                    │
+                    ▼
+               leave_types
+
+employee
+   │
+   └──< employee_documents
+
+holidays
+   │
+   └── independent calendar
+
+=====================================================
+Current Architecture:
+
+                    Role
+                     │
+                     ▼
+                    User
+                     │
+                    1:1
+                     │
+                  Employee
+                     │
+       ┌─────────────┼──────────────┐
+       ▼             ▼              ▼
+ Department     Designation       Shift
+       │             │              │
+       └─────────────┴──────┬───────┘
+                            ▼
+                       Attendance
+                            │
+                            ▼
+                      Leave Request
+
+Employee ───────< Documents
+
+LeaveType ──────< LeaveRequest
+
+Holiday
+
+================================
+Folder Structure:
+
+app/
+├── core/
+│   └── config.py
+│
+├── db/
+│   ├── base.py
+│   ├── engine.py
+│   └── session.py
+│
+├── models/
+│   ├── role.py
+│   ├── department.py
+│   ├── user.py
+│   ├── employee.py
+│   ├── designation.py
+│   ├── attendance.py
+│   ├── leave_type.py
+│   ├── leave_request.py
+│   ├── employee_document.py
+│   ├── holiday.py
+│   ├── shift.py
+│   └── emergency_contact.py
+│
+├── schemas/
+│   └── role.py
+│
+├── services/
+│   └── role_service.py
+│
+└── routers/
+    └── role.py
+
+   ===================================
+   Our final project roadmap
+
+   PHASE 1 — Database
+✅ Models
+✅ Relationships
+✅ Alembic
+✅ MySQL
+✅ Timestamps
+
+PHASE 2 — CRUD
+🚀 Role CRUD ← WE ARE HERE
+⬜ Department
+⬜ Designation
+⬜ User
+⬜ Employee
+⬜ Attendance
+⬜ Leave
+⬜ Documents
+
+PHASE 3 — Production Core
+⬜ Validation
+⬜ Exception handling
+⬜ Logging
+⬜ Transactions
+⬜ JWT
+⬜ RBAC
+⬜ Pagination
+⬜ Filtering
+⬜ Search
+
+PHASE 4 — Performance
+⬜ Redis
+⬜ Caching
+⬜ Query optimization
+⬜ Indexing
+
+PHASE 5 — Async Processing
+⬜ BackgroundTasks
+⬜ Celery
+⬜ Celery Beat
+⬜ Redis Queue
+
+PHASE 6 — DevOps
+⬜ Docker
+⬜ Docker Compose
+⬜ CI/CD
+⬜ Environment management
+
+PHASE 7 — AWS
+⬜ RDS
+⬜ S3
+⬜ Lambda
+⬜ CloudWatch
+
+PHASE 8 — Architecture
+⬜ Microservices
+⬜ API Gateway
+⬜ Service communication
+
+PHASE 9 — Testing
+⬜ Pytest
+⬜ Unit tests
+⬜ Integration tests
+⬜ API tests
+
+PHASE 10 — Production
+⬜ Monitoring
+⬜ Health checks
+⬜ Security
+⬜ Rate limiting
+⬜ Deployment
+
+==========================================
+self = object/instance ki state chahiye
+@staticmethod = instance ki state nahi chahiye
+
+Instance method: use when the behavior depends on a particular object's state.  // self
+Static method: use when the behavior doesn't depend on instance or class state, but logically belongs to the class. // @staticmethod
