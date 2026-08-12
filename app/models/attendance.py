@@ -1,7 +1,7 @@
-from datetime import date, datetime
+from datetime import date, datetime, time
 from enum import Enum
 
-from sqlalchemy import Date, DateTime, ForeignKey, String, UniqueConstraint
+from sqlalchemy import Date, DateTime, ForeignKey, String, UniqueConstraint, Time
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -47,13 +47,13 @@ class Attendance(Base, TimestampMixin):
         nullable=False
     )
 
-    check_in: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True),
+    check_in: Mapped[time | None] = mapped_column(
+        Time(timezone=True),
         nullable=True
     )
 
-    check_out: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True),
+    check_out: Mapped[time | None] = mapped_column(
+        Time(timezone=True),
         nullable=True
     )
 

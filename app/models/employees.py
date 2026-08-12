@@ -1,6 +1,6 @@
 from datetime import date
 from decimal import Decimal
-from sqlalchemy import Date, ForeignKey, Numeric, String
+from sqlalchemy import Date, ForeignKey, Numeric, String, Boolean, true
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base import Base
 from app.models.base_model import TimestampMixin
@@ -9,7 +9,7 @@ class Employee(Base, TimestampMixin):
     __tablename__="employees"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), unique=True, nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), unique=True, nullable=True)
     department_id: Mapped[int] = mapped_column(ForeignKey("departments.id"), nullable=False)
     designation_id: Mapped[int] = mapped_column(ForeignKey("designations.id"), nullable=False)
     employee_code: Mapped[int] = mapped_column(String(100), unique=True, nullable=False, index=True)
@@ -19,8 +19,12 @@ class Employee(Base, TimestampMixin):
     phone: Mapped[int] = mapped_column(String(20), nullable=True)
     joining_date: Mapped[int] = mapped_column(Date, nullable=False)
     salary: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
-    shift_id: Mapped[int] = mapped_column(ForeignKey("shifts.id"), nullable=True, index=True
-)
+    shift_id: Mapped[int] = mapped_column(ForeignKey("shifts.id"), nullable=True, index=True)
+    is_active: Mapped[bool] = mapped_column(
+        Boolean,
+        server_default=true(),
+        nullable=False
+    )
     
     user = relationship("User", back_populates="employee")
     department = relationship("Department", back_populates="employees")

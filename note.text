@@ -545,3 +545,27 @@ Static method: use when the behavior doesn't depend on instance or class state, 
              AWS
               │
         CI/CD Pipeline
+
+===================================================
+Attendance Module Complete
+
+                    ATTENDANCE
+                        │
+       ┌────────────────┼────────────────┐
+       ↓                ↓                ↓
+     CREATE           READ             UPDATE
+       │                │                │
+       │          ┌─────┴─────┐          │
+       │          ↓           ↓          │
+       │       By ID         List         │
+       │                      │           │
+       │             ┌────────┼───────┐   │
+       │             ↓        ↓       ↓   │
+       │           Search   Filter Pagination
+       │
+       └──────────────────────────────────┐
+                                          ↓
+                                       DELETE
+
+                        ↓
+                 MONTHLY SUMMARY
