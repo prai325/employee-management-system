@@ -569,3 +569,43 @@ Attendance Module Complete
 
                         ↓
                  MONTHLY SUMMARY
+
+==========================================================
+               JWT
+                ↓
+            Who are you?
+                ↓
+            User #15
+
+               RBAC(Role-Based Access Control)
+                ↓
+            What can you do?
+                ↓
+            Admin / Manager / Employee
+
+Complete flow of Authentication===========
+
+User
+ ↓
+POST /auth/login
+ ↓
+Email + Password
+ ↓
+Find User
+ ↓
+Verify Password
+ ↓
+Generate JWT
+ ↓
+Access Token
+ ↓
+Protected API
+ ↓
+Decode JWT
+ ↓
+Get Current User
+ ↓
+RBAC
+
+
+pip install "python-jose[cryptography]"

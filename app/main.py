@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.core.config import settings
+from app.auth.routers import router as auth_router
 from app.routers.role import router as role_router
 from app.routers.department import router as department_router
 from app.routers.user import router as user_router
@@ -15,6 +16,7 @@ async def root():
         "message": "Employee Management System API"
     }
 
+app.include_router(auth_router)
 app.include_router(role_router)
 app.include_router(department_router)
 app.include_router(user_router)
