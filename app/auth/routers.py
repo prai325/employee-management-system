@@ -7,6 +7,8 @@ from app.auth.schemas import (
     TokenResponse,
 )
 from app.auth.service import AuthService
+from app.models.user import User
+from app.core.dependencies import get_current_user
 
 
 router = APIRouter(
@@ -35,3 +37,9 @@ async def login(
             status_code=401,
             detail=str(e),
         )
+
+# Test API
+@router.get("/me")
+async def get_me(current_user: User = Depends(get_current_user)):
+
+    return current_user

@@ -27,7 +27,7 @@ def create_access_token(
     expires_delta: timedelta | None = None,
 ):
     to_encode = data.copy()
-
+    
     if expires_delta:
         expire = (
             datetime.now(timezone.utc)
@@ -52,5 +52,5 @@ def create_access_token(
         settings.secret_key,
         algorithm=settings.algorithm,
     )
-
+    
     return encoded_jwt
