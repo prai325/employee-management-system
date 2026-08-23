@@ -7,6 +7,7 @@ from app.routers.user import router as user_router
 from app.routers.designation import (router as designation_router)
 from app.routers.employee import (router as employee_router)
 from app.routers.attendance import router as attendance_router
+from app.routers.permission import router as permission_router
 
 app = FastAPI(title=settings.app_name)
 
@@ -23,3 +24,4 @@ app.include_router(user_router)
 app.include_router(designation_router)
 app.include_router(employee_router)
 app.include_router(attendance_router)
+app.include_router(permission_router)

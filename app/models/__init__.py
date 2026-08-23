@@ -10,3 +10,4 @@ from app.models.employee_document import EmployeeDocument
 from app.models.holiday import Holiday
 from app.models.shift import Shift
 from app.models.emergency_contact import EmergencyContact
+from app.models.permissions import Permission, role_permission_association

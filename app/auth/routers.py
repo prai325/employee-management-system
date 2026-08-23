@@ -8,7 +8,7 @@ from app.auth.schemas import (
 )
 from app.auth.service import AuthService
 from app.models.user import User
-from app.core.dependencies import get_current_user
+from app.core.dependencies import get_current_user, require_role
 
 
 router = APIRouter(
@@ -43,3 +43,11 @@ async def login(
 async def get_me(current_user: User = Depends(get_current_user)):
 
     return current_user
+
+@router.get("/admin-test")
+async def admin_test(current_user: User = Depends(require_role("Admin"))):
+    return {
+        "message": "Welcome Admin!",
+        "user_id": current_user.id,
+        "role": current_user.role.name,
+    }
