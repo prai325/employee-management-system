@@ -3,6 +3,7 @@ from fastapi import (
     Depends,
     HTTPException,
     Query,
+    BackgroundTasks
 )
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -34,6 +35,7 @@ router = APIRouter(
 )
 async def create_employee(
     data: EmployeeCreate,
+    background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
 ):
 
@@ -44,6 +46,7 @@ async def create_employee(
             .create_employee(
                 db=db,
                 data=data,
+                background_tasks=background_tasks
             )
         )
 

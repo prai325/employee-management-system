@@ -39,7 +39,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         raise(credentials_exception)
 
     # result = await db.execute(select(User).options(defer(User.password), selectinload(User.role, Role.permissions)).where(User.id == user_id))
-    result = await db.execute(select(User).options(defer(User.password), selectinload(User.role)).where(User.id == user_id))
+    result = await db.execute(select(User).options(defer(User.password), selectinload(User.role).selectinload(Role.permissions)).where(User.id == user_id))
     user = result.scalar_one_or_none()
     if user is None:
         raise credentials_exception
@@ -61,3 +61,28 @@ def require_role(required_role: str):
         return current_user
     
     return role_checker
+
+def require_permission(required_permission: str):
+    async def permission_checker(
+            current_user: User = Depends(get_current_user)
+    ) -> User:
+        
+        if not current_user.role:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="User role not found",
+            )
+        
+        permissions = current_user.role.permissions
+        
+        has_permission = any(
+            permission.name == required_permission
+            for permission in permissions
+        )
+        if not has_permission:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have permission to access this resource",
+            )
+        return current_user
+    return permission_checker

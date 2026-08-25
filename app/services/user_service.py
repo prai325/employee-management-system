@@ -1,3 +1,4 @@
+from fastapi import BackgroundTasks
 from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -5,13 +6,15 @@ from app.models.user import User
 from app.models.role import Role
 from app.core.security import hash_password
 from app.schemas.user import UserCreate
+from app.core.email import send_welcome_email
 
 class UserService:
 
     @staticmethod
     async def create_user(
         db: AsyncSession,
-        data: UserCreate
+        data: UserCreate,
+        background_tasks: BackgroundTasks,
     ) -> User:
 
         result = await db.execute(
@@ -55,6 +58,15 @@ class UserService:
 
         await db.commit()
         await db.refresh(user)
+
+        # --------------------------------
+        # Send welcome email
+        # --------------------------------
+        background_tasks.add_task(
+            send_welcome_email,
+            user.email,
+            user.first_name
+        )
 
         return user
 

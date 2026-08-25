@@ -2,12 +2,15 @@ from fastapi import (
     APIRouter,
     Depends,
     HTTPException,
-    Query
+    Query,
+    BackgroundTasks
 )
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
+from app.models.user import User
+from app.core.dependencies import require_permission
 
 from app.schemas.user import (
     UserCreate,
@@ -35,13 +38,18 @@ router = APIRouter(
 )
 async def create_user(
     data: UserCreate,
-    db: AsyncSession = Depends(get_db)
+    background_tasks: BackgroundTasks,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(
+        require_permission("user:create")
+    ),
 ):
 
     try:
         return await UserService.create_user(
             db=db,
-            data=data
+            data=data,
+            background_tasks=background_tasks
         )
 
     except ValueError as e:
