@@ -4,7 +4,7 @@ class Settings(BaseSettings):
     app_name: str
 
     database_url: str
-    
+
     secret_key: str
     algorithm: str
     access_token_expire_minutes: int
@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     smtp_password: str
     smtp_from_email: str
     smtp_from_name: str = "Employee Management System"
+
+    redis_url: str
 
     model_config = SettingsConfigDict(
         env_file=".env",

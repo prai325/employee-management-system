@@ -7,6 +7,7 @@ from app.models.role import Role
 from app.core.security import hash_password
 from app.schemas.user import UserCreate
 from app.core.email import send_welcome_email
+from app.tasks.email_tasks import send_welcome_email_task
 
 class UserService:
 
@@ -62,10 +63,22 @@ class UserService:
         # --------------------------------
         # Send welcome email
         # --------------------------------
-        background_tasks.add_task(
-            send_welcome_email,
+
+        # BackgroundTask        
+        # background_tasks.add_task(
+        #     send_welcome_email,
+        #     user.email,
+        #     user.first_name
+        # )
+
+        # Celery Task
+        """This .delay() is important.
+            It means:
+                "Celery, please execute this task asynchronously."
+        """
+        send_welcome_email_task.delay(
             user.email,
-            user.first_name
+            user.first_name,
         )
 
         return user

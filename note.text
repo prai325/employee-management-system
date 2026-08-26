@@ -609,3 +609,31 @@ RBAC
 
 
 pip install "python-jose[cryptography]"
+
+============================================
+Celery + Redis
+
+pip install celery redis
+
+Note: Celery needs a broker. We'll use Redis.
+
+Separate terminal:
+
+celery -A app.core.celery_app.celery_app worker --loglevel=info --pool=solo
+redis-server
+
+Because you're developing on Windows, --pool=solo is useful for local development.
+
+FastAPI (Waiter): Celery Worker (Chef): Message Broker - Redis/RabbitMQ (Order Slip):
+
+Celery me Redis ke 2 main kaam hote hain:1. Message Broker (As a Postman 📬)
+   FastAPI aur Celery do alag-alag processes hain. FastAPI Celery ko direct order nahi de sakta.Jab aap FastAPI me my_task.delay() likhte hain, toh FastAPI us task ki details (jaise task ka naam aur uske arguments) ek message bana kar Redis ke andar daal deta hai.Celery Workers lagaatar Redis par nazar rakhte hain. Jaise hi Redis me koi naya task aata hai, Celery Worker use wahan se uthata hai aur execute (run) kar deta hai.
+
+2. Result Backend (As a Notebook 📝)
+   Jab Celery background me apna kaam poora kar leta hai (for example, heavy calculation ya email  send karna), toh uska jo output ya status hota hai (Success, Failed, ya koi data), use woh Redis me save kar deta hai.Agar baad me FastAPI ko check karna ho ki "Bhai, us task ka kya hua? Kaam khatam hua ya nahi?", toh FastAPI Redis se puch kar status pata kar sakta hai.
+
+Ek simple real-life example se samjhein 🥪
+   Maan lijiye aap ek restaurant me hain:Aap (FastAPI): Aapne order diya (Task trigger kiya).Waiter (Redis Broker): Waiter ne aapka order ek parchi (Kajag) par likha aur use kitchen ki window par chipka diya. Redis yahan wahi window hai jahan orders store hote hain temporary time ke liye.Chef (Celery Worker): Chef ne window se parchi uthayi aur khana banana shuru kar diya.Agar Redis nahi hoga, toh FastAPI Celery ko bata hi nahi payega ki background me kaun sa kaam karna hai.
+
+
+============================================
