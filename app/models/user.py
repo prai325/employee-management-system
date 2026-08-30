@@ -17,6 +17,7 @@ class User(Base, TimestampMixin):
     is_active: Mapped[bool] = mapped_column(Boolean, server_default=true(), nullable=False)
     is_verified: Mapped[bool] = mapped_column(Boolean, server_default=false(), nullable=False)
     last_login: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    profile_image: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
     role = relationship("Role", back_populates="users")
     employee = relationship("Employee", back_populates="user", uselist=False)

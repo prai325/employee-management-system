@@ -10,6 +10,7 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     role_id: int
+    profile_image: str | None = None
 
 
 class UserUpdate(BaseModel):
@@ -20,6 +21,7 @@ class UserUpdate(BaseModel):
     role_id: int | None = None
     is_active: bool | None = None
     is_verified: bool | None = None
+    profile_image: str | None = None
 
 
 class UserResponse(BaseModel):
@@ -32,6 +34,7 @@ class UserResponse(BaseModel):
     is_active: bool
     is_verified: bool
     last_login: datetime | None
+    profile_image: str | None
 
     model_config = ConfigDict(
         from_attributes=True

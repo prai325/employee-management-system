@@ -3,14 +3,19 @@ from fastapi import (
     Depends,
     HTTPException,
     Query,
-    BackgroundTasks
+    BackgroundTasks,
+    File,
+    UploadFile,
+    Form
 )
+from pydantic import EmailStr
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
 from app.models.user import User
 from app.core.dependencies import require_permission
+from app.core.file_upload import save_profile_image
 
 from app.schemas.user import (
     UserCreate,
@@ -36,20 +41,48 @@ router = APIRouter(
     response_model=UserResponse,
     status_code=201
 )
+# async def create_user(
+#     data: UserCreate,
+#     background_tasks: BackgroundTasks,
+#     db: AsyncSession = Depends(get_db),
+#     current_user: User = Depends(
+#         require_permission("user:create")
+#     ),
+# ):
+
+# New Code with profile Image
+
 async def create_user(
-    data: UserCreate,
     background_tasks: BackgroundTasks,
+    first_name: str = Form(...),
+    middle_name: str | None = Form(None),
+    last_name: str = Form(...),
+    email: EmailStr = Form(...),
+    password: str = Form(...),
+    role_id: int = Form(...),
+    file: UploadFile = File(None),  # 🚀 Profile Image File
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(
-        require_permission("user:create")
-    ),
+    current_user: User = Depends(require_permission("user:create")),
 ):
 
     try:
+        saved_filename = await save_profile_image(file)
+
+        # Convert form fields into Pydantic model
+        user_data = UserCreate(
+            first_name=first_name,
+            middle_name=middle_name,
+            last_name=last_name,
+            email=email,
+            password=password,
+            role_id=role_id
+        )
+
         return await UserService.create_user(
             db=db,
-            data=data,
-            background_tasks=background_tasks
+            data=user_data,
+            background_tasks=background_tasks,
+            profile_image_filename=saved_filename
         )
 
     except ValueError as e:

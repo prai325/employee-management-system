@@ -7,7 +7,8 @@ from app.models.role import Role
 from app.core.security import hash_password
 from app.schemas.user import UserCreate
 from app.core.email import send_welcome_email
-from app.tasks.email_tasks import send_welcome_email_task
+# from app.tasks.email_tasks import send_welcome_email_task
+from app.tasks.email_tasks_jinja import send_welcome_email_task
 
 class UserService:
 
@@ -16,6 +17,7 @@ class UserService:
         db: AsyncSession,
         data: UserCreate,
         background_tasks: BackgroundTasks,
+        profile_image_filename: str | None = None,
     ) -> User:
 
         result = await db.execute(
@@ -52,7 +54,8 @@ class UserService:
             last_name=data.last_name,
             email=data.email,
             password=hashed_password,
-            role_id=data.role_id
+            role_id=data.role_id,
+            profile_image=profile_image_filename
         )
 
         db.add(user)
@@ -65,21 +68,22 @@ class UserService:
         # --------------------------------
 
         # BackgroundTask        
-        # background_tasks.add_task(
-        #     send_welcome_email,
-        #     user.email,
-        #     user.first_name
-        # )
+        background_tasks.add_task(
+            send_welcome_email,
+            user.email,
+            user.first_name
+        )
 
         # Celery Task
-        """This .delay() is important.
-            It means:
-                "Celery, please execute this task asynchronously."
-        """
-        send_welcome_email_task.delay(
-            user.email,
-            user.first_name,
-        )
+
+        # """This .delay() is important.
+        #     It means:
+        #         "Celery, please execute this task asynchronously."
+        # """
+        # send_welcome_email_task.delay(
+        #     user.email,
+        #     user.first_name,
+        # )
 
         return user
 

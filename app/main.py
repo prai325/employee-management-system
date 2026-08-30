@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 from app.core.config import settings
 from app.auth.routers import router as auth_router
 from app.routers.role import router as role_router
@@ -10,6 +12,11 @@ from app.routers.attendance import router as attendance_router
 from app.routers.permission import router as permission_router
 
 app = FastAPI(title=settings.app_name)
+
+BASE_DIR = Path(__file__).resolve().parent
+
+# Mount the static directory located inside 'app'
+app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 
 @app.get("/")
 async def root():
