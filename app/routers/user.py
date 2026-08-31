@@ -15,7 +15,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import get_db
 from app.models.user import User
 from app.core.dependencies import require_permission
-from app.core.file_upload import save_profile_image
+from app.utils.file_upload import save_profile_image
 
 from app.schemas.user import (
     UserCreate,
