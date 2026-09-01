@@ -637,3 +637,247 @@ Ek simple real-life example se samjhein 🥪
 
 
 ============================================
+Install AWS SDK for S3 Bucket
+
+pip install boto3 
+
+AWS ko ek virtual city samjho
+
+Ye analogy yaad rakhna:
+
+AWS
+│
+├── EC2       → Computer/Server 🖥️
+├── S3        → File Storage 📦
+├── RDS       → Managed Database 🗄️
+├── IAM       → Security/Permissions 🔐
+├── VPC       → Private Network 🌐
+├── CloudWatch→ Monitoring 📊
+├── Route 53  → DNS 🌍
+└── ELB       → Traffic Distributor 🚦
+
+For your FastAPI application:
+
+             AWS
+              │
+       ┌──────┼──────┐
+       ↓      ↓      ↓
+      EC2     RDS     S3
+       │       │       │
+    FastAPI   MySQL   Images
+       │
+    Celery
+       │
+     Redis
+
+Cloud + AWS Fundamentals
+Q1. What is Cloud Computing?
+
+Simple answer:
+
+Cloud computing means using computing resources such as servers, storage, databases and networking over the internet instead of managing everything on your own computer or physical server.
+
+Example:
+
+Without cloud: ===============
+
+Buy Server
+   ↓
+Install OS
+   ↓
+Configure Network
+   ↓
+Install MySQL
+   ↓
+Maintain Hardware
+
+With AWS: ====================
+
+AWS
+ ↓
+Choose service
+ ↓
+Configure
+ ↓
+Use
+
+What is a Region?
+
+AWS has geographical locations around the world called Regions.
+
+For example:
+
+Mumbai Region
+Singapore Region
+London Region
+Frankfurt Region
+
+What is Availability Zone?
+
+An Availability Zone (AZ) is an isolated location within an AWS Region.
+
+Conceptually:
+
+Mumbai Region
+│
+├── AZ-1
+├── AZ-2
+└── AZ-3
+
+Why?
+
+High availability.
+
+If one AZ has a problem, applications can potentially continue operating from another AZ.
+
+Region vs Availability Zone
+
+Interview question ⭐
+
+Region
+   ↓
+Geographical area
+
+Availability Zone
+   ↓
+Isolated infrastructure location
+inside a Region
+
+Example:
+
+AWS Mumbai Region
+       │
+       ├── AZ 1
+       ├── AZ 2
+       └── AZ 3
+
+AWS learning sequence =============================
+   AWS Fundamentals
+      ↓
+   IAM
+      ↓
+   EC2
+      ↓
+   S3
+      ↓
+   RDS
+      ↓
+   VPC
+      ↓
+   CloudWatch
+      ↓
+   Docker + AWS
+      ↓
+   CI/CD
+      ↓
+   Deploy FastAPI
+
+IAM — Identity and Access Management
+
+IAM decide karta hai:
+
+Who can access what in AWS, and what actions they can perform?
+
+Example:
+
+Developer
+   ↓
+AWS
+   ↓
+Can access S3
+   ↓
+Can upload image
+   ↓
+Cannot delete bucket
+
+IAM ke 4 important concepts
+
+Sabse pehle ye 4 words yaad karo:
+
+IAM
+│
+├── User
+├── Group
+├── Policy
+└── Role
+
+What is IAM?
+
+Answer:
+
+IAM stands for Identity and Access Management. It is an AWS service used to securely manage identities and control access to AWS resources through users, groups, roles and policies.
+
+What is an IAM User?
+
+An IAM User represents an individual identity that can authenticate and access AWS resources according to its assigned permissions.
+
+What is an IAM Group?
+
+An IAM Group is a collection of IAM users to which common permissions can be assigned.
+
+What is an IAM Policy?
+
+An IAM Policy is a JSON-based document that defines what actions are allowed or denied on specific AWS resources.
+
+What is an IAM Role?
+
+An IAM Role is an identity with permissions that can be assumed by trusted entities such as AWS services, applications, or users.
+
+User vs Role?
+IAM User
+→ Usually represents an individual identity.
+
+IAM Role
+→ Used to provide permissions that can be assumed
+  by trusted entities.
+
+What is Least Privilege?
+
+Least privilege means giving an identity only the minimum permissions required to perform its job.
+
+                    AWS IAM
+                       │
+          ┌────────────┼────────────┐
+          ↓            ↓            ↓
+        User         Group         Role
+          │            │            │
+          └────────────┼────────────┘
+                       ↓
+                    Policy
+                       ↓
+                  Permissions
+                       ↓
+               AWS Resources
+
+Q1. What is an IAM Policy?
+
+An IAM Policy is a JSON document that defines permissions for AWS resources, including which actions are allowed or denied.
+
+Q2. What is Effect?
+
+Effect specifies whether an action is allowed or denied.
+
+Q3. What is Action?
+
+Action specifies the AWS operation that an identity is allowed or denied to perform.
+
+Example:
+
+s3:GetObject
+s3:PutObject
+Q4. What is Resource?
+
+Resource specifies the AWS resource on which the policy applies.
+
+Q5. What is Principal?
+
+Principal identifies the entity that is allowed or trusted in a resource-based or trust policy.
+
+Q6. What happens if one policy allows an action and another explicitly denies it?
+
+Explicit Deny takes precedence over Allow.
+
+Q7. What is the principle of least privilege?
+
+Give an identity only the minimum permissions required to perform its task.
+============================================

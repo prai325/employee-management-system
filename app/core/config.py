@@ -18,6 +18,11 @@ class Settings(BaseSettings):
 
     redis_url: str
 
+    aws_access_key_id: str
+    aws_secret_access_key: str
+    aws_region: str
+    aws_s3_bucket: str
+
     model_config = SettingsConfigDict(
         env_file=".env",
         extra="ignore"
