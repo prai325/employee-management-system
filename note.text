@@ -881,3 +881,67 @@ Q7. What is the principle of least privilege?
 
 Give an identity only the minimum permissions required to perform its task.
 ============================================
+
+============== Redis Implementation =====================================
+
+1. Current flow without Redis
+
+Client
+  ↓
+Router
+  ↓
+Employee Service
+  ↓
+MySQL
+  ↓
+Response
+
+Every request:
+
+GET /employees → MySQL
+GET /employees → MySQL
+GET /employees → MySQL
+GET /employees → MySQL
+
+If employee data does not change frequently, it will result in unnecessary database queries.
+
+2. New flow with Redis
+
+   GET /employees
+         ↓
+      Router
+         ↓
+      Service
+         ↓
+      Redis
+      /     \
+   HIT     MISS
+   ↓        ↓
+Return    MySQL
+            ↓
+            Redis
+            ↓
+            Return
+
+
+
+
+======================================= Claude Implementation ==================
+https://code.claude.com/docs/en/quickstart
+
+Ask your first question
+
+Let’s start with understanding your codebase. Try one of these commands:
+what does this project do?
+Claude will analyze your files and provide a summary. You can also ask more specific questions:
+what technologies does this project use?
+where is the main entry point?
+explain the folder structure
+You can also ask Claude about its own capabilities:
+what can Claude Code do?
+how do I create custom skills in Claude Code?
+can Claude Code work with Docker?
+
+add a hello world function to the main file
+=================================================================================
+

@@ -32,3 +32,4 @@ app.include_router(designation_router)
 app.include_router(employee_router)
 app.include_router(attendance_router)
 app.include_router(permission_router)
+

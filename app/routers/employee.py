@@ -21,6 +21,7 @@ from app.services.employee_service import (
     EmployeeService,
 )
 from app.utils.employee_mapper import employee_response
+from app.core.redis import redis_client
 
 
 router = APIRouter(
@@ -170,3 +171,9 @@ async def get_employee(
         "is_active":
             employee.is_active,
     }
+
+@router.get("/redis/redis-test")
+async def redis_test():
+    await redis_client.set("test_key", "Hello, Redis!")
+    value = await redis_client.get("test_key")
+    return {"test_key": value}

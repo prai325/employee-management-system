@@ -5,6 +5,8 @@ from sqlalchemy.orm import selectinload
 from app.models.employees import Employee
 from app.models.department import Department
 from app.models.designation import Designation
+from app.core.redis import redis_client
+import json
 
 from app.schemas.employee import (
     EmployeeCreate,

@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     smtp_from_name: str = "Employee Management System"
 
     redis_url: str
+    redis_host: str = "localhost"
+    redis_port: int = 6379
+    redis_db: int = 0
 
     aws_access_key_id: str
     aws_secret_access_key: str
