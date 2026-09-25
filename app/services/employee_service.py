@@ -13,6 +13,10 @@ from app.schemas.employee import (
     EmployeeUpdate,
 )
 
+
+EMPLOYEE_LIST_CACHE_TTL = 60
+
+
 class EmployeeService:
 
     @staticmethod
@@ -110,6 +114,8 @@ class EmployeeService:
 
         await db.refresh(employee)
 
+        await EmployeeService._clear_employee_list_cache()
+
         result = await db.execute(
             select(Employee)
             .options(
@@ -151,6 +157,27 @@ class EmployeeService:
         page_size: int = 10,
         sort_order: str = "asc",
     ):
+
+        cache_key = "employees:list:" + json.dumps(
+            {
+                "search": search,
+                "department_id": department_id,
+                "designation_id": designation_id,
+                "is_active": is_active,
+                "page": page,
+                "page_size": page_size,
+                "sort_order": sort_order.lower(),
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+
+        try:
+            cached_result = await redis_client.get(cache_key)
+            if cached_result:
+                return json.loads(cached_result)
+        except Exception:
+            pass
 
         offset = (
             page - 1
@@ -341,10 +368,35 @@ class EmployeeService:
                 }
             )
 
-        return {
+        response = {
             "items": items,
             "total": total,
             "page": page,
             "page_size": page_size,
             "total_pages": total_pages,
         }
+
+        try:
+            await redis_client.set(
+                cache_key,
+                json.dumps(response, default=str),
+                ex=EMPLOYEE_LIST_CACHE_TTL,
+            )
+        except Exception:
+            pass
+
+        return response
+
+    @staticmethod
+    async def _clear_employee_list_cache() -> None:
+        try:
+            keys = [
+                key
+                async for key in redis_client.scan_iter(
+                    match="employees:list:*"
+                )
+            ]
+            if keys:
+                await redis_client.delete(*keys)
+        except Exception:
+            pass
