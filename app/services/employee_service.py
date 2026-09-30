@@ -7,6 +7,7 @@ from app.models.department import Department
 from app.models.designation import Designation
 from app.core.redis import redis_client
 import json
+import logging
 
 from app.schemas.employee import (
     EmployeeCreate,
@@ -175,9 +176,12 @@ class EmployeeService:
         try:
             cached_result = await redis_client.get(cache_key)
             if cached_result:
+                logging.info("Employee CACHE HIT")
                 return json.loads(cached_result)
-        except Exception:
-            pass
+
+            logging.info("Employee CACHE MISS")
+        except Exception as e:
+            logging.warning(f"Error occurred while fetching cached employee data: {e}")
 
         offset = (
             page - 1
@@ -382,8 +386,8 @@ class EmployeeService:
                 json.dumps(response, default=str),
                 ex=EMPLOYEE_LIST_CACHE_TTL,
             )
-        except Exception:
-            pass
+        except Exception as e:
+            logging.warning(f"Redis cache SET failed: {e}")
 
         return response
 
@@ -398,5 +402,5 @@ class EmployeeService:
             ]
             if keys:
                 await redis_client.delete(*keys)
-        except Exception:
-            pass
+        except Exception as e:
+            logging.warning(f"Error occurred while clearing employee list cache: {e}")
